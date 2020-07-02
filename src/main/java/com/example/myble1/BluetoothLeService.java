@@ -1,7 +1,6 @@
 package com.example.myble1;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
