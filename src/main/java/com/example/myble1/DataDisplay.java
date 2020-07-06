@@ -58,9 +58,40 @@ public class DataDisplay extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_display);
+
+        final Intent myIntent = getIntent();
+        myDeviceName = myIntent.getStringExtra(EXTRAS_DEVICE_NAME);
+        myDeviceAddress = myIntent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+
+        //Sets up UI references
+        ((TextView) findViewById(R.id.device_address)).setText(myDeviceAddress);
+        myDataField = (TextView) findViewById(R.id.data_value);
+    }
+    private void updateConnectionState(final int resourceId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                myConnectionState.setText(resourceId);
+            }
+        });
+    }
+    private void displayData(String data) {
+        if (data != null) {
+            myDataField.setText(data);
+        }
     }
 }
