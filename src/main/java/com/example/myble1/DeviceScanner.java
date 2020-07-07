@@ -1,6 +1,6 @@
 package com.example.myble1;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;

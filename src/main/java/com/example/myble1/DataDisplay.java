@@ -58,7 +58,7 @@ public class DataDisplay extends AppCompatActivity {
         }
     };
 
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver myGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
@@ -80,7 +80,70 @@ public class DataDisplay extends AppCompatActivity {
         //Sets up UI references
         ((TextView) findViewById(R.id.device_address)).setText(myDeviceAddress);
         myDataField = (TextView) findViewById(R.id.data_value);
+
+
+        getActionBar().setTitle(myDeviceName);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        bindService(gattServiceIntent, myServiceConnection, BIND_AUTO_CREATE);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(myGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (myBluetoothLeService != null) {
+            final boolean result = myBluetoothLeService.connect(myDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myGattUpdateReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(myServiceConnection);
+        myBluetoothLeService = null;
+    }
+
+    //TODO: Make sure to add in menu connect and disconnect to UI
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gatt_services, menu);
+        if(myConnected){
+            menu.findItem(R.id.menu_connect).setVisible(false);
+            menu.findItem(R.id.menu_disconnect).setVisible(true);
+        }
+        else {
+            menu.findItem(R.id.menu_connect).setVisible(true);
+            menu.findItem(R.id.menu_disconnect).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_connect:
+                myBluetoothLeService.connect(myDeviceAddress);
+                return true;
+            case R.id.menu_disconnect:
+                myBluetoothLeService.disconnect();
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void updateConnectionState(final int resourceId) {
         runOnUiThread(new Runnable() {
             @Override
@@ -89,9 +152,21 @@ public class DataDisplay extends AppCompatActivity {
             }
         });
     }
+
+
+
     private void displayData(String data) {
         if (data != null) {
             myDataField.setText(data);
         }
+    }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        myIntentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        myIntentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        myIntentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return myIntentFilter;
     }
 }
