@@ -78,12 +78,12 @@ public class DataDisplay extends AppCompatActivity {
         myDeviceAddress = myIntent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
         //Sets up UI references
-        ((TextView) findViewById(R.id.device_address)).setText(myDeviceAddress);
-        myDataField = (TextView) findViewById(R.id.data_value);
+       // ((TextView) findViewById(R.id.device_address)).setText(myDeviceAddress);
+        myDataField =  findViewById(R.id.data_value);
 
 
-        getActionBar().setTitle(myDeviceName);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setTitle(myDeviceName);
+      //  getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, myServiceConnection, BIND_AUTO_CREATE);
     }
