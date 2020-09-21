@@ -8,4 +8,5 @@
     <string name="data">Data:</string>
     <string name="data_value">No Data</string>
     <string name="heartRateTitle">Heart Rate Data</string>
+    <string name="heartimage">HeartImage</string>
 </resources>

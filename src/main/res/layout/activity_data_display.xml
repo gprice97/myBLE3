@@ -56,5 +56,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="75dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="85dp"
+            android:layout_marginEnd="56dp"
+            android:layout_marginBottom="2dp"
+            android:contentDescription="@string/heartimage"
+            app:layout_constraintBottom_toTopOf="@+id/data_value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/hearticon" />
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
