@@ -62,6 +62,17 @@ public class DataDisplay extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
+            if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
+                myConnected = true;
+                updateConnectionState(R.string.menu_connect);
+                invalidateOptionsMenu();
+            } else if(BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                myConnected = false;
+                updateConnectionState(R.string.menu_disconnect);
+                invalidateOptionsMenu();
+            } /*else if(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)){
+                displayGattServices(myBluetoothLeService.getSupportedGattServices());
+            }*/
             if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }
@@ -160,6 +171,29 @@ public class DataDisplay extends AppCompatActivity {
             myDataField.setText(data);
         }
     }
+
+   /* private void displayGattServices(List<BluetoothGattService> gattServices){
+        if (gattServices == null) return;
+        String uuid = null;
+        String unknownServiceString = "Unknown service";
+        String unknownCharaString = "Unknown characteristic";
+        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<ArrayList<HashMap<String, String>>>();
+        myGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+
+        // Loops through available Characteristics.
+        for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+            charas.add(gattCharacteristic);
+            HashMap<String, String> currentCharaData = new HashMap<String, String>();
+            uuid = gattCharacteristic.getUuid().toString();
+            currentCharaData.put(
+                    LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
+            currentCharaData.put(LIST_UUID, uuid);
+            gattCharacteristicGroupData.add(currentCharaData);
+        }
+        mGattCharacteristics.add(charas);
+        gattCharacteristicData.add(gattCharacteristicGroupData);
+    }*/
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter myIntentFilter = new IntentFilter();
